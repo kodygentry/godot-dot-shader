@@ -28,7 +28,9 @@ uniform vec4 color_b = vec4(0.8, 0.4, 0.2, 1.0);
 uniform int bayer_mode = 4;
 
 void vertex() {
-    POSITION = vec4(VERTEX, 1.0);
+    POSITION = vec4(VERTEX, 1.0); // Godot 4.3 
+    // Godot 4.3
+    // POSITION = vec4(VERTEX.xy, 1.0, 1.0);
 }
 
 void fragment() {
