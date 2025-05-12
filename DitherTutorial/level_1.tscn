@@ -1,0 +1,94 @@
+[gd_scene load_steps=10 format=3 uid="uid://c5jfehuk150f4"]
+
+[ext_resource type="Script" path="res://CharacterBody3D.gd" id="1_icurs"]
+[ext_resource type="Shader" path="res://dot.gdshader" id="1_y6oja"]
+
+[sub_resource type="Environment" id="Environment_2a3ug"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_oyraq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cmhun"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iae34"]
+render_priority = 0
+shader = ExtResource("1_y6oja")
+shader_parameter/depth_threshold = 0.05
+shader_parameter/reverse_depth_threshold = 0.25
+shader_parameter/normal_threshold = 0.6
+shader_parameter/darken_amount = 0.3
+shader_parameter/lighten_amount = 1.5
+shader_parameter/normal_edge_bias = Vector3(1, 1, 1)
+shader_parameter/light_direction = Vector3(-0.96, -0.18, 0.2)
+shader_parameter/dither_repeat = 0.8
+shader_parameter/dither_strength = 1.0
+shader_parameter/min_dither_brightness = 0.1
+shader_parameter/color_a = Vector4(0.2, 0, 0, 1)
+shader_parameter/color_b = Vector4(0.8, 0.4, 0.2, 1)
+shader_parameter/bayer_mode = 4
+
+[sub_resource type="QuadMesh" id="QuadMesh_7t0pu"]
+material = SubResource("ShaderMaterial_iae34")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_s5cog"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_pjjp3"]
+
+[node name="Level1" type="Node3D"]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(576, 324)
+
+[node name="Level" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/Level"]
+environment = SubResource("Environment_2a3ug")
+
+[node name="Floor" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Level"]
+transform = Transform3D(6.5, 0, 0, 0, 0.05, 0, 0, 0, 6.5, 0, 0, 0)
+mesh = SubResource("BoxMesh_oyraq")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Level/Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Level/Floor/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_cmhun")
+
+[node name="Node3D" type="Node3D" parent="SubViewportContainer/SubViewport/Level"]
+transform = Transform3D(-0.707107, -0.683013, -0.183013, -2.26267e-08, -0.258819, 0.965926, -0.707107, 0.683013, 0.183013, 0, 10, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport/Level/Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(0.587785, -0.289926, 0.755282, 0, 0.93358, 0.358368, -0.809017, -0.210643, 0.548745, 7.5, 3.5, 5.5)
+projection = 1
+current = true
+size = 10.0
+far = 97.0
+
+[node name="PostProcessing" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D"]
+transform = Transform3D(0.582015, -0.000446366, -0.813178, -0.301692, 0.928513, -0.21644, 0.755142, 0.3713, 0.540274, 0, 0, 0)
+extra_cull_margin = 16000.0
+mesh = SubResource("QuadMesh_7t0pu")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.737443, 0)
+script = ExtResource("1_icurs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("SphereShape3D_s5cog")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("SphereMesh_pjjp3")
